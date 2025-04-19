@@ -1,0 +1,27 @@
+trigger: none
+
+pool: NPD_Selfhosted_Agents
+
+resources:
+  repositories:
+    - repository: templates
+      displayname: templates from devops
+      type: git
+      name: anoopfirefox/az-devops-agents-k8s
+      ref: main
+
+stages:
+- stage: Deploy
+  jobs:
+  - deployment: helloWorld
+    displayName: 'Agent Setup'
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+            #Branch Checkout
+            - checkout: self
+              persistCredentials: true
+            
+            # Hello World program
+            - template: /scripts/kubernetes/hello-world.yaml@templates
